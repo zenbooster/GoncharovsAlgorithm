@@ -2,8 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-namespace GoncharovsAlgorithm
-{
+namespace GoncharovsAlgorithm {
 class csGoncharovsAlgorithm
 {
 	static uint8_t tab8[256];
