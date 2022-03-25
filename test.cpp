@@ -1,6 +1,6 @@
 #include <sys/time.h>
 #include <iostream>
-#include "csGoncharovsAlgorithmTest.h"
+#include "csGoncharovsAlgorithmTab.h"
 
 using namespace std;
 using namespace GoncharovsAlgorithm;
@@ -19,7 +19,7 @@ int main(void)
 	cout << "Test without tables:" << endl;
     gettimeofday(&t, NULL);
     uint64_t mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    int nr = csGoncharovsAlgorithmTest::getNumberOfRowsNoTab(buf, sz_buf);
+    int nr = csGoncharovsAlgorithm::getNumberOfRows(buf, sz_buf);
     gettimeofday(&t, NULL);
     uint64_t mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
 
@@ -30,7 +30,7 @@ int main(void)
 	cout << "Test with tables:" << endl;
     gettimeofday(&t, NULL);
     mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    nr = csGoncharovsAlgorithmTest::getNumberOfRows(buf, sz_buf);
+    nr = csGoncharovsAlgorithmTab::getNumberOfRows(buf, sz_buf);
     gettimeofday(&t, NULL);
     delete [] buf;
 	mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;

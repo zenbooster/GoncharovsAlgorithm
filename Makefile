@@ -26,4 +26,4 @@ clean:
 	for file in $(CLEANEXTS); do rm -f *.$$file; done
 
 # Indicate dependencies of .cpp files on .h files
-test.o: csGoncharovsAlgorithmTest.h csGoncharovsAlgorithm.h csPop.h
+test.o: csGoncharovsAlgorithmTab.h csGoncharovsAlgorithm.h csPop.h
