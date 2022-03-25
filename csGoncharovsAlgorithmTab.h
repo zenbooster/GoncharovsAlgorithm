@@ -20,7 +20,8 @@ class csGoncharovsAlgorithmTab: public csGoncharovsAlgorithm
 		static inline unsigned int getNumberOfRowsFirst(uint64_t x, int& prevLo);
 		static inline unsigned int getNumberOfRowsNext(uint64_t x, int& prevLo);
 	
-        static unsigned int getNumberOfRows(uint8_t *p, size_t sz);
+		template<class T>
+        static unsigned int getNumberOfRows(T *p, size_t sz);
 };
 
 uint8_t csGoncharovsAlgorithmTab::tab8[256];
@@ -117,9 +118,10 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint64_t x, int& prev
     return uiRes;
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRows(uint8_t *p, size_t sz)
+template<class T>
+unsigned int csGoncharovsAlgorithmTab::getNumberOfRows(T *p, size_t sz)
 {
-    int res = _getNumberOfRows<uint64_t>(
+    int res = _getNumberOfRows<T>(
         p,
         sz,
         getNumberOfRowsFirst,

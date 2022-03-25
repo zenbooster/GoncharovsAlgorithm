@@ -18,10 +18,11 @@ protected:
 	static inline unsigned int _getNumberOfRowsNext(T x, int& prevHi);
 
 	template<typename T>
-	static unsigned int _getNumberOfRows(uint8_t *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&));
+	static unsigned int _getNumberOfRows(T *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&));
 
 public:
-	static unsigned int getNumberOfRows(uint8_t *p, size_t sz);
+	template<class T>
+	static unsigned int getNumberOfRows(T *p, size_t sz);
 };
 
 // Подсчитывает количество рядов в первом элементе.
@@ -56,25 +57,25 @@ int csGoncharovsAlgorithm::_getHi(T x)
     return x >> ((sizeof(x) << 3) - 1);
 }
 
-template<typename T>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRows(uint8_t *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&))
+template<class T>
+unsigned int csGoncharovsAlgorithm::_getNumberOfRows(T *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&))
 {
     int res;
-    T *pcur = (T *)p;
-    T *pend = (T *)(p + sz);
+    T *pend = (T*)((uint8_t*)p + sz);
     int prevHi;
     
-    res = ff(*pcur++, prevHi);
-    for(;pcur < pend; pcur++)
+    res = ff(*p++, prevHi);
+    for(;p < pend; p++)
     {
-        res += fn(*pcur, prevHi);
+        res += fn(*p, prevHi);
     }
     return res;
 }
 
-unsigned int csGoncharovsAlgorithm::getNumberOfRows(uint8_t *p, size_t sz)
+template<class T>
+unsigned int csGoncharovsAlgorithm::getNumberOfRows(T *p, size_t sz)
 {
-    int res = _getNumberOfRows<uint64_t>(
+    int res = _getNumberOfRows<T>(
         p,
         sz,
         _getNumberOfRowsFirst,
