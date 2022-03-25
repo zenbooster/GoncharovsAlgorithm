@@ -5,10 +5,9 @@
 using namespace std;
 using namespace GoncharovsAlgorithm;
 
-csGoncharovsAlgorithm ga; // init tables...
-
 int main(void)
 {
+	csGoncharovsAlgorithmTab ga; // init tables...
 	const size_t sz_buf = 1048576 * 10;
     uint8_t *buf = new uint8_t[sz_buf];
     struct timeval t;

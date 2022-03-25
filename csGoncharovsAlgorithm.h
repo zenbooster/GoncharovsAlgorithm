@@ -21,8 +21,6 @@ protected:
 	static unsigned int _getNumberOfRows(uint8_t *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&));
 
 public:
-	csGoncharovsAlgorithm() {};
-
 	static unsigned int getNumberOfRows(uint8_t *p, size_t sz);
 };
 
