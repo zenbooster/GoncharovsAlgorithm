@@ -20,8 +20,8 @@ protected:
 	template <class T>
 	static inline unsigned int _getNumberOfRowsNext(T x, int& prevHi);
 
-	template<typename FF, typename FN>
-	static unsigned int _getNumberOfRows(uint8_t *p, size_t sz, FF ff, FN fn);
+	template<typename T>
+	static unsigned int _getNumberOfRows(uint8_t *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&));
 
 public:
 	csGoncharovsAlgorithm();
@@ -164,34 +164,30 @@ unsigned int csGoncharovsAlgorithm::getNumberOfRowsNext(uint64_t x, int& prevHi)
     return uiRes;
 }
 
-template<typename FF, typename FN>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRows(uint8_t *p, size_t sz, FF ff, FN fn)
+template<typename T>
+unsigned int csGoncharovsAlgorithm::_getNumberOfRows(uint8_t *p, size_t sz, unsigned int(*ff)(T, int&), unsigned int(*fn)(T, int&))
 {
     int res;
-    uint64_t *p64 = (uint64_t *)p;
-    uint64_t *p64end = (uint64_t *)(p + sz);
+    T *pcur = (T *)p;
+    T *pend = (T *)(p + sz);
     int prevHi;
     
-    res = ff(*p64++, prevHi);
-    for(;p64 < p64end; p64++)
+    res = ff(*pcur++, prevHi);
+    for(;pcur < pend; pcur++)
     {
-        res += fn(*p64, prevHi);
+        res += fn(*pcur, prevHi);
     }
     return res;
 }
 
 unsigned int csGoncharovsAlgorithm::getNumberOfRows(uint8_t *p, size_t sz)
 {
-    int res;
-    uint64_t *p64 = (uint64_t *)p;
-    uint64_t *p64end = (uint64_t *)(p + sz);
-    int prevLo;
-
-    res = getNumberOfRowsFirst(*p64++, prevLo);
-    for(;p64 < p64end; p64++)
-    {
-        res += getNumberOfRowsNext(*p64, prevLo);
-    }
+    int res = _getNumberOfRows<uint64_t>(
+        p,
+        sz,
+        getNumberOfRowsFirst,
+        getNumberOfRowsNext
+    );
     return res;
 }
 }

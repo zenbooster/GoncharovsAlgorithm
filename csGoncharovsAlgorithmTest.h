@@ -11,11 +11,11 @@ class csGoncharovsAlgorithmTest: public csGoncharovsAlgorithm
 
 unsigned int csGoncharovsAlgorithmTest::getNumberOfRowsNoTab(uint8_t *p, size_t sz)
 {
-    int res = _getNumberOfRows(
+    int res = _getNumberOfRows<uint64_t>(
         p,
         sz,
-        _getNumberOfRowsFirst<uint64_t>,
-        _getNumberOfRowsNext<uint64_t>
+        _getNumberOfRowsFirst,
+        _getNumberOfRowsNext
     );
     return res;
 }
