@@ -121,11 +121,9 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint64_t x, int& prev
 template<class T>
 unsigned int csGoncharovsAlgorithmTab::getNumberOfRows(T *p, size_t sz)
 {
-    int res = _getNumberOfRows<T>(
+    int res = _getNumberOfRows<csGoncharovsAlgorithmTab, T>(
         p,
-        sz,
-        getNumberOfRowsFirst,
-        getNumberOfRowsNext
+        sz
     );
     return res;
 }

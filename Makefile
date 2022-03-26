@@ -1,4 +1,5 @@
 CPPFLAGS = -O3
+#CPPFLAGS = -g
 LDFLAGS = -L.
 LDLIBS = -lstdc++
 # Specify extensions of files to delete when cleaning
