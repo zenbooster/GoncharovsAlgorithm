@@ -22,13 +22,9 @@ protected:
 	static inline unsigned int _getNumberOfRowsFirst(T x, int& prevHi);
 	template <class T>
 	static inline unsigned int _getNumberOfRowsNext(T x, int& prevHi);
-	//template <class T>
-	//static unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst, unsigned int(*fn)(T, int&));
 	template <class C, class T>
 	static unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
 
-	//template<class T>
-	//static unsigned int _getNumberOfRows(T *p, size_t sz, unsigned int(*fn)(T, int&));
 	template<class C, class T>
 	static unsigned int _getNumberOfRows(T *p, size_t sz);
 

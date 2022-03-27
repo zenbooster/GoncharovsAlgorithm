@@ -43,6 +43,9 @@ class csPop
             return x;
         }
 
+		template<class T>
+		static bool _chkIfTAvail(T *p, T *pend);
+
     public:
         static inline int pop(uint8_t x)
         {
@@ -67,17 +70,79 @@ class csPop
             x = pop64(x);
             return x & 0x7f;
         }
-
-        static int pop(uint8_t *p, size_t sz)
-        {
-            int res = 0;
-            uint64_t *p64 = (uint64_t *)p;
-            uint64_t *p64end = (uint64_t *)(p + sz);
-            for(;p64 < p64end; p64++)
-            {
-                res += pop(*p64);
-            }
-            return res;
-        }
+	
+		template <class T>
+        static int pop(T *p, size_t sz);
 };
+
+template<class T>
+bool csPop::_chkIfTAvail(T *p, T *pend)
+{
+	return ((uint8_t*)pend-(uint8_t*)p) >= sizeof(T);
+}
+
+template <class T>
+int csPop::pop(T *p, size_t sz)
+{
+    int res = 0;
+    T *pend = (T*)((uint8_t*)p + sz);
+    
+    if (sz >= sizeof(T))
+    {
+    	int t = (size_t)p & (sizeof(T) - 1);
+    	
+    	sz -= t;
+
+    	if (t >= sizeof(uint8_t))
+    	{
+    		res += pop(*(uint8_t*)p);
+    		p = (T*)((uint8_t*)p + 1);
+    		t -= sizeof(uint8_t);
+    	}    	
+    	if (t >= sizeof(uint16_t))
+    	{
+    		res += pop(*(uint16_t*)p);
+    		p = (T*)((uint16_t*)p + 1);
+    		t -= sizeof(uint16_t);
+    	}    	
+    	if (t >= sizeof(uint32_t))
+    	{
+    		res += pop(*(uint32_t*)p);
+    		p = (T*)((uint32_t*)p + 1);
+    		t -= sizeof(uint32_t);
+    	}
+
+		if (_chkIfTAvail(p, pend))
+    	{
+    		sz -= sizeof(T);
+			res += pop(*p++);
+
+    		for(; _chkIfTAvail(p, pend); p++, sz-= sizeof(T))
+    		{
+        		res += pop(*p);
+    		}		
+    	}
+    } // if (sz >= sizeof(T))
+
+    if (sz >= sizeof(uint32_t))
+    {
+    	res += pop(*(uint32_t*)p);
+    	p = (T*)((uint32_t*)p + 1);
+    	sz -= sizeof(uint32_t);
+    }
+    if (sz >= sizeof(uint16_t))
+    {
+    	res += pop(*(uint16_t*)p);
+    	p = (T*)((uint16_t*)p + 1);
+    	sz -= sizeof(uint16_t);
+    }
+    if (sz >= sizeof(uint8_t))
+    {
+    	res += pop(*(uint8_t*)p);
+    	p = (T*)((uint8_t*)p + 1);
+    	sz -= sizeof(uint8_t);
+    }
+
+    return res;
+}
 }
