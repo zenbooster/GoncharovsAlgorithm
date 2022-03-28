@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace GoncharovsAlgorithm
+namespace GA
 {
 class csPop
 {

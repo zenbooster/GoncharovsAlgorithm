@@ -5,8 +5,8 @@
 
 using namespace std;
 
-namespace GoncharovsAlgorithm {
-class csGoncharovsAlgorithm
+namespace GA {
+class csGA
 {
 private:
 	template<class T>
@@ -36,7 +36,7 @@ public:
 // Подсчитывает количество рядов в первом элементе.
 // Параметр prevHi возвращает состояние старшего бита в целях последующего объединения рядов, идущих через границу между элементами.
 template <class T>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRowsFirst(T x, int& prevHi)
+unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return _getNumberOfRowsNext(x, prevHi);
@@ -45,7 +45,7 @@ unsigned int csGoncharovsAlgorithm::_getNumberOfRowsFirst(T x, int& prevHi)
 // Подсчитывает количество рядов в следующем элементе.
 // Параметр prevHi используется для объединения рядов, идущих через границу между элементами.
 template <class T>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRowsNext(T x, int& prevHi)
+unsigned int csGA::_getNumberOfRowsNext(T x, int& prevHi)
 {
     unsigned int uiRes = csPop::pop(static_cast<T>(x ^ ((x << 1) | prevHi)));
     prevHi = _getHi(x);
@@ -54,19 +54,19 @@ unsigned int csGoncharovsAlgorithm::_getNumberOfRowsNext(T x, int& prevHi)
 }
 
 template <class T>
-int csGoncharovsAlgorithm::_initPrevHi(T x)
+int csGA::_initPrevHi(T x)
 {
     return 1 - (x & 1);
 }
 
 template <class T>
-int csGoncharovsAlgorithm::_getHi(T x)
+int csGA::_getHi(T x)
 {
     return x >> ((sizeof(x) << 3) - 1);
 }
 
 template <class C, class T>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
+unsigned int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
 {
 	if (isFirst)
 	{
@@ -78,13 +78,13 @@ unsigned int csGoncharovsAlgorithm::_getNumberOfRows(T x, int& prevHi, bool& isF
 }
 
 template<class T>
-bool csGoncharovsAlgorithm::_chkIfTAvail(T *p, T *pend)
+bool csGA::_chkIfTAvail(T *p, T *pend)
 {
 	return ((uint8_t*)pend-(uint8_t*)p) >= sizeof(T);
 }
 
 template<class C, class T>
-unsigned int csGoncharovsAlgorithm::_getNumberOfRows(T *p, size_t sz)
+unsigned int csGA::_getNumberOfRows(T *p, size_t sz)
 {
     int res = 0;
     T *pend = (T*)((uint8_t*)p + sz);
@@ -151,9 +151,9 @@ unsigned int csGoncharovsAlgorithm::_getNumberOfRows(T *p, size_t sz)
 }
 
 template<class T>
-unsigned int csGoncharovsAlgorithm::getNumberOfRows(T *p, size_t sz)
+unsigned int csGA::getNumberOfRows(T *p, size_t sz)
 {
-    int res = _getNumberOfRows<csGoncharovsAlgorithm, T>(
+    int res = _getNumberOfRows<csGA, T>(
         p,
         sz
     );

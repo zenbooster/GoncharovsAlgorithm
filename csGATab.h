@@ -1,15 +1,15 @@
 #pragma once
-#include "csGoncharovsAlgorithm.h"
+#include "csGA.h"
 
-namespace GoncharovsAlgorithm {
+namespace GA {
 
-class csGoncharovsAlgorithmTab: public csGoncharovsAlgorithm
+class csGATab: public csGA
 {
 	static uint8_t tab8[256];
 	static uint8_t tab16[65536];
 
     public:
-	    csGoncharovsAlgorithmTab();
+	    csGATab();
 	    
 		static inline unsigned int getNumberOfRowsFirst(uint8_t x, int& prevLo);
 		static inline unsigned int getNumberOfRowsNext(uint8_t x, int& prevLo);
@@ -24,10 +24,10 @@ class csGoncharovsAlgorithmTab: public csGoncharovsAlgorithm
         static unsigned int getNumberOfRows(T *p, size_t sz);
 };
 
-uint8_t csGoncharovsAlgorithmTab::tab8[256];
-uint8_t csGoncharovsAlgorithmTab::tab16[65536];
+uint8_t csGATab::tab8[256];
+uint8_t csGATab::tab16[65536];
 
-csGoncharovsAlgorithmTab::csGoncharovsAlgorithmTab()
+csGATab::csGATab()
 {
     for (int prevHi, i = 0; i < 0x100; i++)
     {
@@ -42,15 +42,15 @@ csGoncharovsAlgorithmTab::csGoncharovsAlgorithmTab()
     }
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsFirst(uint8_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsFirst(uint8_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint8_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsNext(uint8_t x, int& prevHi)
 {
-    unsigned int uiRes = csGoncharovsAlgorithmTab::tab8[x];
+    unsigned int uiRes = csGATab::tab8[x];
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -60,15 +60,15 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint8_t x, int& prevH
     return uiRes;
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsFirst(uint16_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsFirst(uint16_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint16_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsNext(uint16_t x, int& prevHi)
 {
-    unsigned int uiRes = csGoncharovsAlgorithmTab::tab16[x];
+    unsigned int uiRes = csGATab::tab16[x];
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -78,17 +78,17 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint16_t x, int& prev
     return uiRes;
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsFirst(uint32_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsFirst(uint32_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint32_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsNext(uint32_t x, int& prevHi)
 {
     int prev = prevHi;
-    unsigned int uiRes = csGoncharovsAlgorithmTab::getNumberOfRowsFirst((uint16_t)(x & 0xffff), prev);
-    uiRes += csGoncharovsAlgorithmTab::getNumberOfRowsNext((uint16_t)(x >> 16), prev);
+    unsigned int uiRes = csGATab::getNumberOfRowsFirst((uint16_t)(x & 0xffff), prev);
+    uiRes += csGATab::getNumberOfRowsNext((uint16_t)(x >> 16), prev);
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -98,17 +98,17 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint32_t x, int& prev
     return uiRes;
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsFirst(uint64_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsFirst(uint64_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint64_t x, int& prevHi)
+unsigned int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
 {
     int prev = prevHi;
-    unsigned int uiRes = csGoncharovsAlgorithmTab::getNumberOfRowsFirst((uint32_t)(x & 0xffffffff), prev);
-    uiRes += csGoncharovsAlgorithmTab::getNumberOfRowsNext((uint32_t)(x >> 32), prev);
+    unsigned int uiRes = csGATab::getNumberOfRowsFirst((uint32_t)(x & 0xffffffff), prev);
+    uiRes += csGATab::getNumberOfRowsNext((uint32_t)(x >> 32), prev);
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -119,9 +119,9 @@ unsigned int csGoncharovsAlgorithmTab::getNumberOfRowsNext(uint64_t x, int& prev
 }
 
 template<class T>
-unsigned int csGoncharovsAlgorithmTab::getNumberOfRows(T *p, size_t sz)
+unsigned int csGATab::getNumberOfRows(T *p, size_t sz)
 {
-    int res = _getNumberOfRows<csGoncharovsAlgorithmTab, T>(
+    int res = _getNumberOfRows<csGATab, T>(
         p,
         sz
     );

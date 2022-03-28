@@ -1,13 +1,13 @@
 #include <sys/time.h>
 #include <iostream>
-#include "csGoncharovsAlgorithmTab.h"
+#include "csGATab.h"
 
 using namespace std;
-using namespace GoncharovsAlgorithm;
+using namespace GA;
 
 int main(void)
 {
-	csGoncharovsAlgorithmTab ga; // init tables...
+	csGATab ga; // init tables...
 	const size_t sz_buf = 1048576 * 10;
     uint8_t *buf = new uint8_t[sz_buf];
     struct timeval t;
@@ -30,7 +30,7 @@ int main(void)
 	cout << "Test without tables:" << endl;
     gettimeofday(&t, NULL);
     mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    nr = csGoncharovsAlgorithm::getNumberOfRows((uint64_t*)buf, sz_buf);
+    nr = csGA::getNumberOfRows((uint64_t*)buf, sz_buf);
     gettimeofday(&t, NULL);
     mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
 
@@ -41,7 +41,7 @@ int main(void)
 	cout << "Test with tables:" << endl;
     gettimeofday(&t, NULL);
     mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    nr = csGoncharovsAlgorithmTab::getNumberOfRows((uint64_t*)buf, sz_buf);
+    nr = csGATab::getNumberOfRows((uint64_t*)buf, sz_buf);
     gettimeofday(&t, NULL);
     delete [] buf;
 	mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
