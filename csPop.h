@@ -11,7 +11,7 @@ class csPop
         static constexpr uint64_t m4 = 0x0f0f0f0f0f0f0f0f; //binary:  4 zeros,  4 ones ...
 
         template <class T>
-        static inline T pop8(T x)
+        static inline T _pop8(T x)
         {
             x -= (x >> 1) & m1;             //put count of each 2 bits into those 2 bits
             x = (x & m2) + ((x >> 2) & m2); //put count of each 4 bits into those 4 bits 
@@ -19,58 +19,41 @@ class csPop
             return x;
         }
 
-        template <class T>
-        static inline T pop16(T x)
+        template <class T, int width>
+        struct _pop
         {
-            x = pop8(x);
-            x += x >> 8;  //put count of each 16 bits into their lowest 8 bits
-            return x;
-        }
+        	static inline T res(T x)
+        	{
+        		const int hw = width >> 1;
+	
+	        	x = _pop<T, hw>::res(x);
+	        	x += x >> hw;
+	
+            	return x;
+           	}
+        };
 
         template <class T>
-        static inline T pop32(T x)
+        struct _pop<T, 8>
         {
-            x = pop16(x);
-            x += x >> 16;  //put count of each 32 bits into their lowest 8 bits
-            return x;
-        }
-
-        template <class T>
-        static inline T pop64(T x)
-        {
-            x = pop32(x);
-            x += x >> 32;  //put count of each 64 bits into their lowest 8 bits
-            return x;
-        }
+	        static inline T res(T x)
+	        {
+	       		x = _pop8(x);
+	            return x;
+	        }
+        };
 
 		template<class T>
 		static bool _chkIfTAvail(T *p, T *pend);
 
     public:
-        static inline int pop(uint8_t x)
+		template <class T>
+        static inline int pop(T x)
         {
-            x = pop8(x);
+            x = _pop<T, sizeof(T) << 3>::res(x);
             return x & 0x7f;
         }
 
-        static inline int pop(uint16_t x)
-        {
-            x = pop16(x);
-            return x & 0x7f;
-        }
-
-        static inline int pop(uint32_t x)
-        {
-            x = pop32(x);
-            return x & 0x7f;
-        }
-
-        static inline int pop(uint64_t x)
-        {
-            x = pop64(x);
-            return x & 0x7f;
-        }
-	
 		template <class T>
         static int pop(T *p, size_t sz);
 };

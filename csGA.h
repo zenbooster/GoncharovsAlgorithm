@@ -1,5 +1,4 @@
 #pragma once
-#include <stdint.h>
 #include <iostream>
 #include "csPop.h"
 
@@ -25,10 +24,16 @@ protected:
 	template <class C, class T>
 	static unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
 
-	template<class C, class T>
-	static unsigned int _getNumberOfRows(T *p, size_t sz);
+	template <class C, class T>
+	static unsigned int _getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst);
 
 public:
+	template<class T>
+	static unsigned int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
+	
+	template<class T>
+	static unsigned int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
+
 	template<class T>
 	static unsigned int getNumberOfRows(T *p, size_t sz);
 };
@@ -84,13 +89,11 @@ bool csGA::_chkIfTAvail(T *p, T *pend)
 }
 
 template<class C, class T>
-unsigned int csGA::_getNumberOfRows(T *p, size_t sz)
+unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
 {
     int res = 0;
     T *pend = (T*)((uint8_t*)p + sz);
-    int prevHi;
-    bool isFirst = true;
-    
+   
     if (sz >= sizeof(T))
     {
     	int t = (size_t)p & (sizeof(T) - 1);
@@ -151,12 +154,34 @@ unsigned int csGA::_getNumberOfRows(T *p, size_t sz)
 }
 
 template<class T>
-unsigned int csGA::getNumberOfRows(T *p, size_t sz)
+unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
+{
+	cout << "unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+    int res = _getNumberOfRows<csGA, T>(
+        p,
+        sz,
+        prevHi,
+        true
+    );
+    return res;
+}
+
+template<class T>
+unsigned int csGA::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 {
     int res = _getNumberOfRows<csGA, T>(
         p,
-        sz
+        sz,
+        prevHi,
+        false
     );
     return res;
+}
+
+template<class T>
+unsigned int csGA::getNumberOfRows(T *p, size_t sz)
+{
+	int prevHi;
+	return getNumberOfRowsFirst(p, sz, prevHi);
 }
 }

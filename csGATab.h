@@ -2,7 +2,6 @@
 #include "csGA.h"
 
 namespace GA {
-
 class csGATab: public csGA
 {
 	static uint8_t tab8[256];
@@ -21,7 +20,13 @@ class csGATab: public csGA
 		static inline unsigned int getNumberOfRowsNext(uint64_t x, int& prevLo);
 	
 		template<class T>
-        static unsigned int getNumberOfRows(T *p, size_t sz);
+        static unsigned int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
+        
+		template<class T>
+        static unsigned int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
+        
+        template<class T>
+		static unsigned int getNumberOfRows(T *p, size_t sz);
 };
 
 uint8_t csGATab::tab8[256];
@@ -119,12 +124,34 @@ unsigned int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
 }
 
 template<class T>
-unsigned int csGATab::getNumberOfRows(T *p, size_t sz)
+unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
+{
+	cout << "unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+    int res = _getNumberOfRows<csGATab, T>(
+        p,
+        sz,
+        prevHi,
+        true
+    );
+    return res;
+}
+
+template<class T>
+unsigned int csGATab::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 {
     int res = _getNumberOfRows<csGATab, T>(
         p,
-        sz
+        sz,
+        prevHi,
+        false
     );
     return res;
+}
+
+template<class T>
+unsigned int csGATab::getNumberOfRows(T *p, size_t sz)
+{
+	int prevHi;
+	return getNumberOfRowsFirst(p, sz, prevHi);
 }
 }
