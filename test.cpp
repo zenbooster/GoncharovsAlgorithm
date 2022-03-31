@@ -6,27 +6,32 @@
 using namespace std;
 using namespace GA;
 
+typedef unsigned __int128 uint128_t;
+
+//typedef uint256_t TT;
+//typedef uint128_t TT;
+typedef uint64_t TT;
+//typedef uint32_t TT;
+
 int main(void)
 {
+	//cout << sizeof(TT) << endl;
+	//TT v = stBitPattern<TT>::res(0x0f);
+	//cout << csPop::pop(v) << endl;
 	csGATab ga; // init tables...
-	//const size_t sz_buf = 10;//1048576 * 10;
-	const size_t sz_buf = 1048576 * 16;
+	const size_t sz_buf = 1048576 * 10;
+	//const size_t sz_buf = 256;
 	int prevHi;
     uint8_t *buf = new uint8_t[sz_buf];
-    uint8_t *buf2 = new uint8_t[sz_buf];
     struct timeval t;
 
     for(int i = 0; i < sz_buf; i++)
-        buf[i] = 0xc3;
-
-    for(int i = 0; i < sz_buf; i++)
-        buf2[i] = 0xc3;
+        buf[i] = 0x0f;
 
 	cout << "Test of csPop:" << endl;
     gettimeofday(&t, NULL);
     uint64_t mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    int nr = csPop::pop((uint64_t*)buf, sz_buf);
-    nr += csPop::pop((uint64_t*)buf2, sz_buf);
+    int nr = csPop::pop((TT*)buf, sz_buf);
     gettimeofday(&t, NULL);
     uint64_t mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
 
@@ -37,9 +42,7 @@ int main(void)
 	cout << "Test without tables:" << endl;
     gettimeofday(&t, NULL);
     mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    //nr = csGA::getNumberOfRowsFirst((uint64_t*)buf, sz_buf, prevHi);
-    //nr += csGA::getNumberOfRowsNext((uint64_t*)buf2, sz_buf, prevHi);
-    nr = csGA::getNumberOfRows((uint64_t*)buf, sz_buf);
+    nr = csGA::getNumberOfRows((TT*)buf, sz_buf);
     gettimeofday(&t, NULL);
     mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
 
@@ -50,11 +53,9 @@ int main(void)
 	cout << "Test with tables:" << endl;
     gettimeofday(&t, NULL);
     mt0 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
-    //nr = csGATab::getNumberOfRowsFirst((uint64_t*)buf, sz_buf, prevHi);
-    //nr += csGATab::getNumberOfRowsNext((uint64_t*)buf2, sz_buf, prevHi);
-    nr = csGATab::getNumberOfRows((uint64_t*)buf, sz_buf);
+    nr = csGATab::getNumberOfRows((TT*)buf, sz_buf);
     gettimeofday(&t, NULL);
-    delete [] buf2;
+
     delete [] buf;
 	mt1 = (uint64_t)t.tv_sec * 1000 + t.tv_usec / 1000;
 

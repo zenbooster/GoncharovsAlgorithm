@@ -1,28 +1,28 @@
 #pragma once
-#include <iostream>
+//#include <iostream>
 #include "csPop.h"
 
-using namespace std;
+//using namespace std;
 
 namespace GA {
 class csGA
 {
 private:
 	template<class T>
-	static inline bool _chkIfTAvail(T *p, T *pend);
+	static inline constexpr bool _chkIfTAvail(T *p, T *pend);
 	
 protected:
 	template <class T>
-	static inline int _initPrevHi(T x);
+	static inline constexpr int _initPrevHi(T x);
 	template <class T>
-	static inline int _getHi(T x);
+	static inline constexpr int _getHi(T x);
 
 	template <class T>
-	static inline unsigned int _getNumberOfRowsFirst(T x, int& prevHi);
+	static inline constexpr unsigned int _getNumberOfRowsFirst(T x, int& prevHi);
 	template <class T>
-	static inline unsigned int _getNumberOfRowsNext(T x, int& prevHi);
+	static inline constexpr unsigned int _getNumberOfRowsNext(T x, int& prevHi);
 	template <class C, class T>
-	static unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
+	static inline constexpr unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
 
 	template <class C, class T>
 	static unsigned int _getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst);
@@ -41,7 +41,7 @@ public:
 // Подсчитывает количество рядов в первом элементе.
 // Параметр prevHi возвращает состояние старшего бита в целях последующего объединения рядов, идущих через границу между элементами.
 template <class T>
-unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
+constexpr unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return _getNumberOfRowsNext(x, prevHi);
@@ -50,7 +50,7 @@ unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
 // Подсчитывает количество рядов в следующем элементе.
 // Параметр prevHi используется для объединения рядов, идущих через границу между элементами.
 template <class T>
-unsigned int csGA::_getNumberOfRowsNext(T x, int& prevHi)
+constexpr unsigned int csGA::_getNumberOfRowsNext(T x, int& prevHi)
 {
     unsigned int uiRes = csPop::pop(static_cast<T>(x ^ ((x << 1) | prevHi)));
     prevHi = _getHi(x);
@@ -59,19 +59,19 @@ unsigned int csGA::_getNumberOfRowsNext(T x, int& prevHi)
 }
 
 template <class T>
-int csGA::_initPrevHi(T x)
+constexpr int csGA::_initPrevHi(T x)
 {
-    return 1 - (x & 1);
+    return 1 - (int)(x & 1);
 }
 
 template <class T>
-int csGA::_getHi(T x)
+constexpr int csGA::_getHi(T x)
 {
-    return x >> ((sizeof(x) << 3) - 1);
+    return (int)(x >> ((sizeof(x) << 3) - 1));
 }
 
 template <class C, class T>
-unsigned int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
+constexpr unsigned int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
 {
 	if (isFirst)
 	{
@@ -83,7 +83,7 @@ unsigned int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
 }
 
 template<class T>
-bool csGA::_chkIfTAvail(T *p, T *pend)
+constexpr bool csGA::_chkIfTAvail(T *p, T *pend)
 {
 	return ((uint8_t*)pend-(uint8_t*)p) >= sizeof(T);
 }
@@ -118,6 +118,12 @@ unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
     		p = (T*)((uint32_t*)p + 1);
     		t -= sizeof(uint32_t);
     	}
+    	if (t >= sizeof(uint64_t))
+    	{
+    		res += _getNumberOfRows<C>(*(uint64_t*)p, prevHi, isFirst);
+    		p = (T*)((uint64_t*)p + 1);
+    		t -= sizeof(uint64_t);
+    	}
 
 		if (_chkIfTAvail(p, pend))
     	{
@@ -131,6 +137,12 @@ unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
     	}
     } // if (sz >= sizeof(T))
 
+    if (sz >= sizeof(uint64_t))
+    {
+    	res += _getNumberOfRows<C>(*(uint64_t*)p, prevHi, isFirst);
+    	p = (T*)((uint64_t*)p + 1);
+    	sz -= sizeof(uint64_t);
+    }
     if (sz >= sizeof(uint32_t))
     {
     	res += _getNumberOfRows<C>(*(uint32_t*)p, prevHi, isFirst);
@@ -156,7 +168,7 @@ unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
 template<class T>
 unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 {
-	cout << "unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+	//cout << "unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
     int res = _getNumberOfRows<csGA, T>(
         p,
         sz,

@@ -126,7 +126,7 @@ unsigned int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
 template<class T>
 unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 {
-	cout << "unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+	//cout << "unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
     int res = _getNumberOfRows<csGATab, T>(
         p,
         sz,
