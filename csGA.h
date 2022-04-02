@@ -18,30 +18,30 @@ protected:
 	static inline constexpr int _getHi(T x);
 
 	template <class T>
-	static inline constexpr unsigned int _getNumberOfRowsFirst(T x, int& prevHi);
+	static inline constexpr int _getNumberOfRowsFirst(T x, int& prevHi);
 	template <class T>
-	static inline constexpr unsigned int _getNumberOfRowsNext(T x, int& prevHi);
+	static inline constexpr int _getNumberOfRowsNext(T x, int& prevHi);
 	template <class C, class T>
-	static inline constexpr unsigned int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
+	static inline constexpr int _getNumberOfRows(T x, int& prevHi, bool& isFirst);
 
 	template <class C, class T>
-	static unsigned int _getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst);
+	static int _getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst);
 
 public:
 	template<class T>
-	static unsigned int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
+	static int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
 	
 	template<class T>
-	static unsigned int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
+	static int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
 
 	template<class T>
-	static unsigned int getNumberOfRows(T *p, size_t sz);
+	static int getNumberOfRows(T *p, size_t sz);
 };
 
 // Подсчитывает количество рядов в первом элементе.
 // Параметр prevHi возвращает состояние старшего бита в целях последующего объединения рядов, идущих через границу между элементами.
 template <class T>
-constexpr unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
+constexpr int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return _getNumberOfRowsNext(x, prevHi);
@@ -50,9 +50,9 @@ constexpr unsigned int csGA::_getNumberOfRowsFirst(T x, int& prevHi)
 // Подсчитывает количество рядов в следующем элементе.
 // Параметр prevHi используется для объединения рядов, идущих через границу между элементами.
 template <class T>
-constexpr unsigned int csGA::_getNumberOfRowsNext(T x, int& prevHi)
+constexpr int csGA::_getNumberOfRowsNext(T x, int& prevHi)
 {
-    unsigned int uiRes = csPop::pop(static_cast<T>(x ^ ((x << 1) | prevHi)));
+    int uiRes = csPop::pop(static_cast<T>(x ^ ((x << 1) | prevHi)));
     prevHi = _getHi(x);
 
     return uiRes;
@@ -71,7 +71,7 @@ constexpr int csGA::_getHi(T x)
 }
 
 template <class C, class T>
-constexpr unsigned int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
+constexpr int csGA::_getNumberOfRows(T x, int& prevHi, bool& isFirst)
 {
 	if (isFirst)
 	{
@@ -89,7 +89,7 @@ constexpr bool csGA::_chkIfTAvail(T *p, T *pend)
 }
 
 template<class C, class T>
-unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
+int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
 {
     int res = 0;
     T *pend = (T*)((uint8_t*)p + sz);
@@ -166,9 +166,9 @@ unsigned int csGA::_getNumberOfRows(T *p, size_t sz, int& prevHi, bool isFirst)
 }
 
 template<class T>
-unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
+int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 {
-	//cout << "unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+	//cout << "int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
     int res = _getNumberOfRows<csGA, T>(
         p,
         sz,
@@ -179,7 +179,7 @@ unsigned int csGA::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 }
 
 template<class T>
-unsigned int csGA::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
+int csGA::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 {
     int res = _getNumberOfRows<csGA, T>(
         p,
@@ -191,7 +191,7 @@ unsigned int csGA::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 }
 
 template<class T>
-unsigned int csGA::getNumberOfRows(T *p, size_t sz)
+int csGA::getNumberOfRows(T *p, size_t sz)
 {
 	int prevHi;
 	return getNumberOfRowsFirst(p, sz, prevHi);

@@ -10,23 +10,23 @@ class csGATab: public csGA
     public:
 	    csGATab();
 	    
-		static inline unsigned int getNumberOfRowsFirst(uint8_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsNext(uint8_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsFirst(uint16_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsNext(uint16_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsFirst(uint32_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsNext(uint32_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsFirst(uint64_t x, int& prevLo);
-		static inline unsigned int getNumberOfRowsNext(uint64_t x, int& prevLo);
+		static inline int getNumberOfRowsFirst(uint8_t x, int& prevLo);
+		static inline int getNumberOfRowsNext(uint8_t x, int& prevLo);
+		static inline int getNumberOfRowsFirst(uint16_t x, int& prevLo);
+		static inline int getNumberOfRowsNext(uint16_t x, int& prevLo);
+		static inline int getNumberOfRowsFirst(uint32_t x, int& prevLo);
+		static inline int getNumberOfRowsNext(uint32_t x, int& prevLo);
+		static inline int getNumberOfRowsFirst(uint64_t x, int& prevLo);
+		static inline int getNumberOfRowsNext(uint64_t x, int& prevLo);
 	
 		template<class T>
-        static unsigned int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
+        static int getNumberOfRowsFirst(T *p, size_t sz, int& prevHi);
         
 		template<class T>
-        static unsigned int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
+        static int getNumberOfRowsNext(T *p, size_t sz, int& prevHi);
         
         template<class T>
-		static unsigned int getNumberOfRows(T *p, size_t sz);
+		static int getNumberOfRows(T *p, size_t sz);
 };
 
 uint8_t csGATab::tab8[256];
@@ -47,15 +47,15 @@ csGATab::csGATab()
     }
 }
 
-unsigned int csGATab::getNumberOfRowsFirst(uint8_t x, int& prevHi)
+int csGATab::getNumberOfRowsFirst(uint8_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGATab::getNumberOfRowsNext(uint8_t x, int& prevHi)
+int csGATab::getNumberOfRowsNext(uint8_t x, int& prevHi)
 {
-    unsigned int uiRes = csGATab::tab8[x];
+    int uiRes = csGATab::tab8[x];
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -65,15 +65,15 @@ unsigned int csGATab::getNumberOfRowsNext(uint8_t x, int& prevHi)
     return uiRes;
 }
 
-unsigned int csGATab::getNumberOfRowsFirst(uint16_t x, int& prevHi)
+int csGATab::getNumberOfRowsFirst(uint16_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGATab::getNumberOfRowsNext(uint16_t x, int& prevHi)
+int csGATab::getNumberOfRowsNext(uint16_t x, int& prevHi)
 {
-    unsigned int uiRes = csGATab::tab16[x];
+    int uiRes = csGATab::tab16[x];
     int lo = x & 1;
     if (lo == prevHi)
         uiRes--;
@@ -83,16 +83,16 @@ unsigned int csGATab::getNumberOfRowsNext(uint16_t x, int& prevHi)
     return uiRes;
 }
 
-unsigned int csGATab::getNumberOfRowsFirst(uint32_t x, int& prevHi)
+int csGATab::getNumberOfRowsFirst(uint32_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGATab::getNumberOfRowsNext(uint32_t x, int& prevHi)
+int csGATab::getNumberOfRowsNext(uint32_t x, int& prevHi)
 {
     int prev = prevHi;
-    unsigned int uiRes = csGATab::getNumberOfRowsFirst((uint16_t)(x & 0xffff), prev);
+    int uiRes = csGATab::getNumberOfRowsFirst((uint16_t)(x & 0xffff), prev);
     uiRes += csGATab::getNumberOfRowsNext((uint16_t)(x >> 16), prev);
     int lo = x & 1;
     if (lo == prevHi)
@@ -103,16 +103,16 @@ unsigned int csGATab::getNumberOfRowsNext(uint32_t x, int& prevHi)
     return uiRes;
 }
 
-unsigned int csGATab::getNumberOfRowsFirst(uint64_t x, int& prevHi)
+int csGATab::getNumberOfRowsFirst(uint64_t x, int& prevHi)
 {
     prevHi = _initPrevHi(x);
     return getNumberOfRowsNext(x, prevHi);
 }
 
-unsigned int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
+int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
 {
     int prev = prevHi;
-    unsigned int uiRes = csGATab::getNumberOfRowsFirst((uint32_t)(x & 0xffffffff), prev);
+    int uiRes = csGATab::getNumberOfRowsFirst((uint32_t)(x & 0xffffffff), prev);
     uiRes += csGATab::getNumberOfRowsNext((uint32_t)(x >> 32), prev);
     int lo = x & 1;
     if (lo == prevHi)
@@ -124,9 +124,9 @@ unsigned int csGATab::getNumberOfRowsNext(uint64_t x, int& prevHi)
 }
 
 template<class T>
-unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
+int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 {
-	//cout << "unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
+	//cout << "int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)" << endl;
     int res = _getNumberOfRows<csGATab, T>(
         p,
         sz,
@@ -137,7 +137,7 @@ unsigned int csGATab::getNumberOfRowsFirst(T *p, size_t sz, int& prevHi)
 }
 
 template<class T>
-unsigned int csGATab::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
+int csGATab::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 {
     int res = _getNumberOfRows<csGATab, T>(
         p,
@@ -149,7 +149,7 @@ unsigned int csGATab::getNumberOfRowsNext(T *p, size_t sz, int& prevHi)
 }
 
 template<class T>
-unsigned int csGATab::getNumberOfRows(T *p, size_t sz)
+int csGATab::getNumberOfRows(T *p, size_t sz)
 {
 	int prevHi;
 	return getNumberOfRowsFirst(p, sz, prevHi);
